@@ -1,0 +1,35 @@
+List of files/Layer Mappings:
+
+CurrentDriver-v1.0.cmp - Top Copper
+CurrentDriver-v1.0.ly2 - Inner Copper (layer 2)
+CurrentDriver-v1.0.ly15 - Inner Copper (layer 3)
+CurrentDriver-v1.0.sol - Bottom Copper
+
+CurrentDriver-v1.0.plc - Top silkscreen
+CurrentDriver-v1.0.pls - Bottom silkscreen
+
+CurrentDriver-v1.0.stc - Top stopmask
+CurrentDriver-v1.0.sts - Bottom stopmask
+
+CurrentDriver-v1.0.crc - Top solderpaste stencil (if needed)
+CurrentDriver-v1.0.srs - N/A
+
+
+Drill Files:
+
+CurrentDriver-v1.0.drd - Excellon drill file
+CurrentDriver-v1.0.dri - Drill information file
+
+
+Centroid data:
+
+CurrentDriver-v1.0_centroid.csv - Centroid data file
+
+Note, the BOM contains the list of components to be placed. There are a few components listed in the centroid data file which are not in the BOM -- I will place these myself. All of the components to be populated are on the top.
+
+Thanks! And if you have any questions, don't hesitate to contact me.
+
+Neal Pisenti
+University of Maryland / JQI
+npisenti@umd.edu
+503-475-3384
