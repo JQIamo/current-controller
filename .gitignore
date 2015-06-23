@@ -9,28 +9,28 @@
 # It contains a serial number and references to the file structure
 # on your computer.
 # comment the following line if you want to have your project file included.
-eagle.epf
+# eagle.epf
 
 # CAM files
-*.$$$
-*.cmp
-*.ly2
-*.l15
-*.sol
-*.plc
-*.stc
-*.sts
-*.crc
-*.crs
+# *.$$$
+# *.cmp
+# *.ly2
+# *.l15
+# *.sol
+# *.plc
+# *.stc
+# *.sts
+# *.crc
+# *.crs
+# 
+# *.dri
+# *.drl
+# *.gpi
+# *.pls
 
-*.dri
-*.drl
-*.gpi
-*.pls
-
-*.drd
+# *.drd
 *.drd.*
 
-*.info
+# *.info
 
-*.eps
+# *.eps
