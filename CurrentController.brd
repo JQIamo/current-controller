@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.005" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.0005" altunitdist="inch" altunit="inch"/>
+<grid distance="0.001" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.0005" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="yes" active="yes"/>
@@ -187,7 +187,7 @@
 <text x="74.93" y="25.527" size="0.508" layer="21" rot="R180">DDATA</text>
 <text x="63.246" y="25.527" size="0.508" layer="21" rot="R180">DCS</text>
 <text x="27.94" y="50.419" size="0.508" layer="21">VNEG_QUIET</text>
-<text x="31.496" y="25.908" size="0.508" layer="21" rot="R180">VPOS_QUIET</text>
+<text x="32.385" y="25.654" size="0.508" layer="21" rot="R180">VPOS_QUIET</text>
 <text x="7.366" y="35.941" size="0.7112" layer="21">FFW</text>
 <wire x1="16.002" y1="63.627" x2="16.002" y2="81.407" width="0.4064" layer="21"/>
 <wire x1="16.002" y1="81.407" x2="31.242" y2="81.407" width="0.4064" layer="21"/>
@@ -219,7 +219,7 @@ backplane select</text>
 <text x="6.858" y="53.975" size="1.778" layer="21">FFWD</text>
 <text x="25.781" y="90.424" size="1.27" layer="21">CurrentController v2.0
 NCP - 2015</text>
-<text x="52.705" y="42.545" size="1.27" layer="21">C12-15</text>
+<text x="53.594" y="42.672" size="1.27" layer="21">C12-15</text>
 <text x="140.97" y="81.026" size="1.27" layer="21">VUSB</text>
 <text x="112.776" y="54.102" size="1.27" layer="21">ISP Prog</text>
 </plain>
@@ -2830,6 +2830,32 @@ Source: http://www.analog.com/UploadedFiles/Data_Sheets/703465986AD8611_2_0.pdf<
 <wire x1="-2.5" y1="1" x2="-2.5" y2="2.5" width="0.127" layer="21"/>
 <wire x1="-2.5" y1="2.5" x2="-1" y2="2.5" width="0.127" layer="21"/>
 </package>
+<package name="SC-89">
+<smd name="P$1" x="-0.5" y="-0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<smd name="P$2" x="0.5" y="-0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<smd name="P$3" x="0" y="0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<wire x1="-0.889" y1="-1.143" x2="-0.889" y2="1.143" width="0.127" layer="21"/>
+<wire x1="-0.889" y1="1.143" x2="0.889" y2="1.143" width="0.127" layer="21"/>
+<wire x1="0.889" y1="1.143" x2="0.889" y2="-1.143" width="0.127" layer="21"/>
+<wire x1="0.889" y1="-1.143" x2="-0.889" y2="-1.143" width="0.127" layer="21"/>
+<text x="-2.667" y="1.524" size="1.27" layer="25">&gt;NAME</text>
+<text x="-2.794" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="SOT323">
+<description>&lt;b&gt;Small Outline Transistor&lt;/b&gt;</description>
+<wire x1="-1" y1="-0.55" x2="1" y2="-0.55" width="0.2032" layer="51"/>
+<wire x1="1" y1="-0.55" x2="1" y2="0.55" width="0.2032" layer="21"/>
+<wire x1="1" y1="0.55" x2="-1" y2="0.55" width="0.2032" layer="51"/>
+<wire x1="-1" y1="0.55" x2="-1" y2="-0.55" width="0.2032" layer="21"/>
+<smd name="3" x="0" y="0.9" dx="0.5" dy="1" layer="1"/>
+<smd name="1" x="-0.65" y="-0.9" dx="0.5" dy="1" layer="1"/>
+<smd name="2" x="0.65" y="-0.9" dx="0.5" dy="1" layer="1"/>
+<text x="1.225" y="0.03" size="1.016" layer="25">&gt;NAME</text>
+<text x="1.225" y="-1.33" size="1.016" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.15" y1="0.65" x2="0.15" y2="1.2" layer="51"/>
+<rectangle x1="-0.8" y1="-1.2" x2="-0.5" y2="-0.65" layer="51"/>
+<rectangle x1="0.5" y1="-1.2" x2="0.8" y2="-0.65" layer="51"/>
+</package>
 </packages>
 </library>
 <library name="rlc-jqi">
@@ -3247,12 +3273,12 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 </autorouter>
 <elements>
 <element name="CP1" library="rcl" package="PANASONIC_F" value="220uF" x="137.16" y="16.256" smashed="yes" rot="R270">
-<attribute name="NAME" x="139.222" y="16.99" size="0.508" layer="25" rot="R270"/>
+<attribute name="NAME" x="142.27" y="15.593" size="0.508" layer="25" rot="R270"/>
 <attribute name="VALUE" x="134.785" y="18.006" size="1.016" layer="27" rot="R270"/>
 <attribute name="PARTNO" value="PCE3955CT-ND" x="137.16" y="16.256" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="CN1" library="rcl" package="PANASONIC_F" value="220uF" x="137.16" y="41.656" smashed="yes" rot="R90">
-<attribute name="NAME" x="135.606" y="41.43" size="0.508" layer="25" rot="R90"/>
+<attribute name="NAME" x="142.845" y="40.033" size="0.508" layer="25" rot="R90"/>
 <attribute name="VALUE" x="139.535" y="39.906" size="1.016" layer="27" rot="R90"/>
 <attribute name="PARTNO" value="PCE3955CT-ND" x="137.16" y="41.656" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
@@ -3465,13 +3491,13 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <attribute name="VALUE" x="112.268" y="55.118" size="1.27" layer="27" ratio="10"/>
 </element>
 <element name="IC2" library="misc-ics" package="TO223-3" value="L7912" x="89.662" y="38.1" smashed="yes" rot="R270">
-<attribute name="NAME" x="88.646" y="44.704" size="0.508" layer="25"/>
+<attribute name="NAME" x="88.9" y="44.196" size="0.508" layer="25"/>
 <attribute name="VALUE" x="82.804" y="31.242" size="1.27" layer="27"/>
 <attribute name="PARTNO" value="MC7912CD2TGOS-ND" x="89.662" y="38.1" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="VREFIC" library="linear" package="TO39/4" value="LM399H" x="46.99" y="28.956" smashed="yes" rot="R270">
 <attribute name="PARTNO" value="LM399H#PBF-ND" x="46.99" y="28.956" size="1.778" layer="27" rot="R270" display="off"/>
-<attribute name="NAME" x="44.069" y="22.352" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="43.688" y="21.971" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="46.355" y="32.258" size="1.27" layer="27" ratio="10" rot="R270"/>
 </element>
 <element name="R12" library="jqi_passives" package="R_0603" value="28.7k" x="41.021" y="29.083" smashed="yes" rot="R90">
@@ -3699,7 +3725,7 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <attribute name="PARTNO" value="478-2890-1-ND" x="57.912" y="31.369" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="C21" library="jqi_passives" package="C_MLCC_0306" value="10nF" x="57.912" y="34.417" smashed="yes" rot="R270">
-<attribute name="NAME" x="58.912" y="35.317" size="1.016" layer="25" font="vector" rot="R270"/>
+<attribute name="NAME" x="59.293" y="35.825" size="1.016" layer="25" font="vector" rot="R270"/>
 <attribute name="PARTNO" value="478-2890-1-ND" x="57.912" y="34.417" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="C22" library="jqi_passives" package="C_MLCC_0603" value="100nF" x="62.484" y="31.369" rot="R270">
@@ -3732,18 +3758,18 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 </element>
 <element name="F9" library="jqi_passives" package="L_FERRITE_0603" value="1k_ferrite" x="33.02" y="18.9103" smashed="yes" rot="R90">
 <attribute name="PARTNO" value="490-1034-1-ND" x="27.432" y="15.1003" size="0.508" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="35.014" y="18.2183" size="1.016" layer="25" font="vector" rot="R90"/>
+<attribute name="NAME" x="33.363" y="15.8053" size="1.016" layer="25" font="vector" rot="R90"/>
 </element>
 <element name="C29" library="jqi_passives" package="C_MLCC_0612" value="0.47uF" x="29.972" y="19.05" smashed="yes" rot="R90">
 <attribute name="PARTNO" value="490-4382-1-ND" x="33.274" y="19.05" size="0.508" layer="27" rot="R90" display="off"/>
-<attribute name="NAME" x="27.872" y="17.45" size="1.016" layer="25" font="vector" rot="R90"/>
+<attribute name="NAME" x="27.618" y="17.831" size="1.016" layer="25" font="vector" rot="R90"/>
 </element>
 <element name="C30" library="jqi_passives" package="C_MLCC_0306" value="10nF" x="28.448" y="22.606" smashed="yes">
 <attribute name="NAME" x="26.432" y="21.198" size="1.016" layer="25" font="vector" rot="R90"/>
 <attribute name="PARTNO" value="478-2890-1-ND" x="28.448" y="22.606" size="1.778" layer="27" display="off"/>
 </element>
 <element name="C31" library="jqi_passives" package="C_MLCC_0306" value="10nF" x="31.496" y="22.606" smashed="yes" rot="R180">
-<attribute name="NAME" x="33.766" y="23.252" size="1.016" layer="25" font="vector" rot="R270"/>
+<attribute name="NAME" x="33.385" y="23.887" size="1.016" layer="25" font="vector" rot="R270"/>
 <attribute name="PARTNO" value="478-2890-1-ND" x="31.496" y="22.606" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="CL1" library="jqi_passives" package="C_MLCC_0603" value="100nF" x="38.227" y="33.274" smashed="yes" rot="R270">
@@ -3817,6 +3843,8 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <attribute name="VALUE" x="129.159" y="79.375" size="1.27" layer="27"/>
 </element>
 <element name="L3" library="jqi_passives" package="R_0805" value="" x="137.5029" y="92.7354"/>
+<element name="IC8" library="semiconductor-jqi" package="SC-89" value="PMOS-SOT323-SC89" x="36.068" y="44.45" rot="R90"/>
+<element name="IC7" library="semiconductor-jqi" package="SOT323" value="PMOS-SOT323" x="36.068" y="44.45" rot="R90"/>
 </elements>
 <signals>
 <signal name="+15V">
@@ -4065,10 +4093,49 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <vertex x="160.02" y="-2.54"/>
 <vertex x="0" y="-2.54"/>
 </polygon>
-<via x="76.581" y="23.495" extent="1-16" drill="0.254"/>
+<via x="75.7936" y="24.7142" extent="1-16" drill="0.254"/>
 <wire x1="75.272" y1="17.069" x2="76.149" y2="17.069" width="0.4064" layer="1"/>
 <wire x1="76.149" y1="17.069" x2="76.454" y2="16.764" width="0.4064" layer="1"/>
 <contactref element="L3" pad="P$2"/>
+<via x="8.3566" y="31.6992" extent="1-16" drill="0.254"/>
+<via x="37.3634" y="85.3694" extent="1-16" drill="0.254"/>
+<via x="39.116" y="77.47" extent="1-16" drill="0.254"/>
+<via x="49.1744" y="68.072" extent="1-16" drill="0.254"/>
+<via x="88.4174" y="64.3128" extent="1-16" drill="0.254"/>
+<via x="84.8868" y="49.4538" extent="1-16" drill="0.254"/>
+<via x="112.9792" y="51.308" extent="1-16" drill="0.254"/>
+<via x="128.1684" y="49.8856" extent="1-16" drill="0.254"/>
+<via x="103.7082" y="43.6118" extent="1-16" drill="0.254"/>
+<via x="90.7034" y="45.9486" extent="1-16" drill="0.254"/>
+<via x="52.0446" y="63.1444" extent="1-16" drill="0.254"/>
+<via x="38.2016" y="69.2658" extent="1-16" drill="0.254"/>
+<via x="30.0736" y="60.0456" extent="1-16" drill="0.254"/>
+<via x="15.7226" y="51.7398" extent="1-16" drill="0.254"/>
+<via x="25.1968" y="6.9342" extent="1-16" drill="0.254"/>
+<via x="45.5676" y="9.4488" extent="1-16" drill="0.254"/>
+<via x="56.7436" y="6.6802" extent="1-16" drill="0.254"/>
+<via x="55.3974" y="20.3708" extent="1-16" drill="0.254"/>
+<via x="43.4086" y="18.9484" extent="1-16" drill="0.254"/>
+<via x="78.6892" y="8.7884" extent="1-16" drill="0.254"/>
+<via x="68.4784" y="9.7028" extent="1-16" drill="0.254"/>
+<via x="100.2538" y="6.4516" extent="1-16" drill="0.254"/>
+<via x="118.1862" y="22.8854" extent="1-16" drill="0.254"/>
+<via x="131.8514" y="27.432" extent="1-16" drill="0.254"/>
+<via x="84.1248" y="54.8894" extent="1-16" drill="0.254"/>
+<via x="56.7944" y="69.5706" extent="1-16" drill="0.254"/>
+<via x="43.3832" y="69.1388" extent="1-16" drill="0.254"/>
+<via x="26.1366" y="85.1916" extent="1-16" drill="0.254"/>
+<via x="14.5542" y="62.2808" extent="1-16" drill="0.254"/>
+<via x="11.9634" y="28.8036" extent="1-16" drill="0.254"/>
+<via x="15.6464" y="6.9088" extent="1-16" drill="0.254"/>
+<via x="24.7904" y="15.8242" extent="1-16" drill="0.254"/>
+<via x="138.557" y="94.5134" extent="1-16" drill="0.254"/>
+<via x="139.6238" y="92.9386" extent="1-16" drill="0.254"/>
+<via x="146.05" y="92.1004" extent="1-16" drill="0.254"/>
+<via x="146.4056" y="87.4776" extent="1-16" drill="0.254"/>
+<via x="151.6888" y="92.5322" extent="1-16" drill="0.254"/>
+<via x="148.6916" y="90.805" extent="1-16" drill="0.254"/>
+<via x="143.129" y="93.9546" extent="1-16" drill="0.254"/>
 <wire x1="66.294" y1="45.022" x2="66.944" y2="45.022" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="N$8">
@@ -4110,6 +4177,14 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <wire x1="37.1602" y1="43.5" x2="37.1602" y2="41.898" width="0.5842" layer="1"/>
 <wire x1="39.116" y1="43.422" x2="37.168" y2="43.422" width="0.5842" layer="1"/>
 <wire x1="37.168" y1="43.422" x2="37.168" y2="43.5" width="0.5842" layer="1"/>
+<contactref element="IC8" pad="P$1"/>
+<contactref element="IC7" pad="1"/>
+<polygon width="0.127" layer="1" thermals="no">
+<vertex x="36.4236" y="44.196"/>
+<vertex x="36.4236" y="43.053"/>
+<vertex x="37.4904" y="43.053"/>
+<vertex x="37.4904" y="44.196"/>
+</polygon>
 </signal>
 <signal name="N$13">
 <contactref element="R2" pad="P$2"/>
@@ -4146,6 +4221,15 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <wire x1="37.084" y1="45.484" x2="37.168" y2="45.4" width="0.4064" layer="1"/>
 <contactref element="R16" pad="P$1"/>
 <wire x1="37.084" y1="48.018" x2="37.084" y2="46.482" width="0.381" layer="1"/>
+<contactref element="IC8" pad="P$2"/>
+<contactref element="IC7" pad="2"/>
+<polygon width="0.127" layer="1" thermals="no">
+<vertex x="36.4236" y="44.704"/>
+<vertex x="36.4236" y="45.847"/>
+<vertex x="37.4396" y="45.847"/>
+<vertex x="37.4396" y="44.7294"/>
+<vertex x="37.4396" y="44.704"/>
+</polygon>
 </signal>
 <signal name="N$4">
 <contactref element="BUF" pad="7"/>
@@ -5278,6 +5362,10 @@ Phone: 503-829-9108 x555.&lt;p&gt; v1.1Mod10/16/07~Layers-core reversal.Distance
 <contactref element="QFB1" pad="3"/>
 <contactref element="LOUT1" pad="1"/>
 <wire x1="34.968" y1="44.45" x2="28.832" y2="44.45" width="1.016" layer="1"/>
+<contactref element="IC8" pad="P$3"/>
+<contactref element="IC7" pad="3"/>
+<wire x1="35.168" y1="44.45" x2="35.418" y2="44.45" width="0" layer="19" extent="1-1"/>
+<wire x1="34.968" y1="44.45" x2="35.168" y2="44.45" width="0" layer="19" extent="1-1"/>
 </signal>
 <signal name="MOD_OUT">
 <contactref element="RJH1" pad="P$2"/>

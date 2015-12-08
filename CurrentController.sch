@@ -19971,6 +19971,32 @@ Source: http://www.analog.com/UploadedFiles/Data_Sheets/703465986AD8611_2_0.pdf<
 <wire x1="-2.5" y1="1" x2="-2.5" y2="2.5" width="0.127" layer="21"/>
 <wire x1="-2.5" y1="2.5" x2="-1" y2="2.5" width="0.127" layer="21"/>
 </package>
+<package name="SOT323">
+<description>&lt;b&gt;Small Outline Transistor&lt;/b&gt;</description>
+<wire x1="-1" y1="-0.55" x2="1" y2="-0.55" width="0.2032" layer="51"/>
+<wire x1="1" y1="-0.55" x2="1" y2="0.55" width="0.2032" layer="21"/>
+<wire x1="1" y1="0.55" x2="-1" y2="0.55" width="0.2032" layer="51"/>
+<wire x1="-1" y1="0.55" x2="-1" y2="-0.55" width="0.2032" layer="21"/>
+<smd name="3" x="0" y="0.9" dx="0.5" dy="1" layer="1"/>
+<smd name="1" x="-0.65" y="-0.9" dx="0.5" dy="1" layer="1"/>
+<smd name="2" x="0.65" y="-0.9" dx="0.5" dy="1" layer="1"/>
+<text x="1.225" y="0.03" size="1.016" layer="25">&gt;NAME</text>
+<text x="1.225" y="-1.33" size="1.016" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.15" y1="0.65" x2="0.15" y2="1.2" layer="51"/>
+<rectangle x1="-0.8" y1="-1.2" x2="-0.5" y2="-0.65" layer="51"/>
+<rectangle x1="0.5" y1="-1.2" x2="0.8" y2="-0.65" layer="51"/>
+</package>
+<package name="SC-89">
+<smd name="P$1" x="-0.5" y="-0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<smd name="P$2" x="0.5" y="-0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<smd name="P$3" x="0" y="0.65" dx="0.6" dy="0.5" layer="1" rot="R90"/>
+<wire x1="-0.889" y1="-1.143" x2="-0.889" y2="1.143" width="0.127" layer="21"/>
+<wire x1="-0.889" y1="1.143" x2="0.889" y2="1.143" width="0.127" layer="21"/>
+<wire x1="0.889" y1="1.143" x2="0.889" y2="-1.143" width="0.127" layer="21"/>
+<wire x1="0.889" y1="-1.143" x2="-0.889" y2="-1.143" width="0.127" layer="21"/>
+<text x="-2.667" y="1.524" size="1.27" layer="25">&gt;NAME</text>
+<text x="-2.794" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="LEVEL_SHIFTER_6CH">
@@ -19998,6 +20024,38 @@ Source: http://www.analog.com/UploadedFiles/Data_Sheets/703465986AD8611_2_0.pdf<
 <text x="22.86" y="12.7" size="2.54" layer="95">&gt;NAME</text>
 <text x="22.86" y="7.62" size="2.54" layer="96">&gt;VALUE</text>
 </symbol>
+<symbol name="P_MOSFET">
+<wire x1="-1.651" y1="0" x2="0" y2="0" width="0.1524" layer="94"/>
+<wire x1="-1.524" y1="-2.159" x2="0" y2="-2.159" width="0.1524" layer="94"/>
+<wire x1="-2.54" y1="-2.54" x2="-2.54" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="0" x2="0" y2="-2.159" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="-0.508" x2="1.397" y2="-3.048" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="-3.048" x2="0" y2="-3.048" width="0.1524" layer="94"/>
+<wire x1="-1.524" y1="2.159" x2="0" y2="2.159" width="0.1524" layer="94"/>
+<wire x1="0" y1="2.159" x2="0" y2="2.54" width="0.1524" layer="94"/>
+<wire x1="0" y1="3.048" x2="1.397" y2="3.048" width="0.1524" layer="94"/>
+<wire x1="1.397" y1="3.048" x2="1.397" y2="0.381" width="0.1524" layer="94"/>
+<wire x1="0" y1="-2.159" x2="0" y2="-2.54" width="0.1524" layer="94"/>
+<text x="2.54" y="0" size="1.778" layer="96">&gt;VALUE</text>
+<text x="2.54" y="2.54" size="1.778" layer="95">&gt;NAME</text>
+<rectangle x1="-2.032" y1="1.397" x2="-1.524" y2="2.921" layer="94"/>
+<rectangle x1="-2.032" y1="-0.762" x2="-1.524" y2="0.762" layer="94"/>
+<rectangle x1="-2.032" y1="-2.921" x2="-1.524" y2="-1.397" layer="94"/>
+<rectangle x1="0.762" y1="-0.635" x2="2.032" y2="-0.508" layer="94"/>
+<pin name="D" x="0" y="5.08" visible="off" length="short" direction="pas" rot="R270"/>
+<pin name="S" x="0" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
+<pin name="G" x="-5.08" y="-2.54" visible="off" length="short" direction="pas"/>
+<polygon width="0.1016" layer="94">
+<vertex x="-0.127" y="0"/>
+<vertex x="-1.143" y="-0.635"/>
+<vertex x="-1.143" y="0.635"/>
+</polygon>
+<polygon width="0.1016" layer="94">
+<vertex x="1.397" y="-0.508"/>
+<vertex x="0.762" y="0.508"/>
+<vertex x="2.032" y="0.508"/>
+</polygon>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="NT2006" prefix="U">
@@ -20024,6 +20082,33 @@ Source: http://www.analog.com/UploadedFiles/Data_Sheets/703465986AD8611_2_0.pdf<
 <connect gate="G$1" pin="GND" pad="15 P$17"/>
 <connect gate="G$1" pin="VA" pad="16"/>
 <connect gate="G$1" pin="VB" pad="13"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="PMOS-SOT323" prefix="IC">
+<gates>
+<gate name="G$1" symbol="P_MOSFET" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT323">
+<connects>
+<connect gate="G$1" pin="D" pad="3"/>
+<connect gate="G$1" pin="G" pad="1"/>
+<connect gate="G$1" pin="S" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="-SC89" package="SC-89">
+<connects>
+<connect gate="G$1" pin="D" pad="P$3"/>
+<connect gate="G$1" pin="G" pad="P$1"/>
+<connect gate="G$1" pin="S" pad="P$2"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -20520,6 +20605,8 @@ Source: http://www.analog.com/UploadedFiles/Data_Sheets/703465986AD8611_2_0.pdf<
 <part name="L3" library="jqi_passives" deviceset="L_FERRITE_SMD" device="LFERRITE_0805"/>
 <part name="VSS12" library="supply1" deviceset="VSS" device=""/>
 <part name="GND19" library="supply1" deviceset="GND" device=""/>
+<part name="IC8" library="semiconductor-jqi" deviceset="PMOS-SOT323" device="-SC89"/>
+<part name="IC7" library="semiconductor-jqi" deviceset="PMOS-SOT323" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -21396,6 +21483,7 @@ CW motion = decreasing gain.
 Note: Polarity inversion @ G = 0.</text>
 <text x="35.56" y="330.2" size="1.778" layer="98" rot="R90">Short beneath this component</text>
 <text x="-17.78" y="210.82" size="1.778" layer="91">CHECK PACKAGE!!</text>
+<text x="20.32" y="279.4" size="1.778" layer="91">Temp packages, to decide on right MOS</text>
 </plain>
 <instances>
 <instance part="R1" gate="G$1" x="-64.77" y="238.76">
@@ -21530,6 +21618,8 @@ Note: Polarity inversion @ G = 0.</text>
 <attribute name="PARTNO" x="43.18" y="447.04" size="1.778" layer="96" display="off"/>
 </instance>
 <instance part="MON" gate="G$1" x="-5.08" y="208.28" rot="MR0"/>
+<instance part="IC8" gate="G$1" x="40.64" y="248.92"/>
+<instance part="IC7" gate="G$1" x="40.64" y="266.7"/>
 </instances>
 <busses>
 </busses>
@@ -21651,6 +21741,16 @@ Note: Polarity inversion @ G = 0.</text>
 <pinref part="QFB1" gate="G$1" pin="G"/>
 <wire x1="-48.26" y1="238.76" x2="-35.56" y2="238.76" width="0.1524" layer="91"/>
 </segment>
+<segment>
+<pinref part="IC8" gate="G$1" pin="G"/>
+<wire x1="35.56" y1="246.38" x2="30.48" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="246.38" x2="27.94" y2="246.38" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="264.16" x2="30.48" y2="264.16" width="0.1524" layer="91"/>
+<wire x1="30.48" y1="264.16" x2="30.48" y2="246.38" width="0.1524" layer="91"/>
+<junction x="30.48" y="246.38"/>
+<label x="25.4" y="264.16" size="1.778" layer="95"/>
+<pinref part="IC7" gate="G$1" pin="G"/>
+</segment>
 </net>
 <net name="N$13" class="0">
 <segment>
@@ -21691,6 +21791,17 @@ Note: Polarity inversion @ G = 0.</text>
 <pinref part="U3" gate="A" pin="-IN"/>
 <pinref part="R16" gate="G$1" pin="1"/>
 <wire x1="-147.32" y1="223.52" x2="-147.32" y2="226.06" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC8" gate="G$1" pin="S"/>
+<wire x1="40.64" y1="238.76" x2="40.64" y2="241.3" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="241.3" x2="40.64" y2="243.84" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="261.62" x2="48.26" y2="261.62" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="261.62" x2="48.26" y2="241.3" width="0.1524" layer="91"/>
+<wire x1="48.26" y1="241.3" x2="40.64" y2="241.3" width="0.1524" layer="91"/>
+<junction x="40.64" y="241.3"/>
+<label x="40.64" y="238.76" size="1.778" layer="95"/>
+<pinref part="IC7" gate="G$1" pin="S"/>
 </segment>
 </net>
 <net name="N$4" class="0">
@@ -21906,6 +22017,15 @@ Note: Polarity inversion @ G = 0.</text>
 <pinref part="LOUT1" gate="G$1" pin="1"/>
 <label x="-10.16" y="382.27" size="1.778" layer="95"/>
 <wire x1="1.27" y1="382.27" x2="-10.16" y2="382.27" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="IC8" gate="G$1" pin="D"/>
+<wire x1="40.64" y1="254" x2="45.72" y2="254" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="254" x2="45.72" y2="274.32" width="0.1524" layer="91"/>
+<wire x1="45.72" y1="274.32" x2="40.64" y2="274.32" width="0.1524" layer="91"/>
+<wire x1="40.64" y1="274.32" x2="40.64" y2="271.78" width="0.1524" layer="91"/>
+<label x="40.64" y="274.32" size="1.778" layer="95"/>
+<pinref part="IC7" gate="G$1" pin="D"/>
 </segment>
 </net>
 <net name="MOD_OUT" class="0">
