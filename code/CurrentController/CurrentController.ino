@@ -555,83 +555,35 @@
 #include <SPI.h>
 #include "LCD.h"
 
+#include "src/cc_interrupts.h"
+#include "src/cc_api.h"
 
+// these are rough, but good enough for now.
+// eventually implement a calibration?
 #define transferSlope 426.311
 #define transferOffset 153.734
 
 
-#define SW_ENABLE 3  // frontpanel switch
-#define VREG_ON 4    // vreg enable pin
+#define VREG_ON		4    // vreg enable pin
 
-#define DAC_CS 14 // A0         // chip select pin
-#define DAC_MOSI 15
-#define DAC_SCK 16
+#define DAC_CS 		14 // A0         // chip select pin
+#define DAC_MOSI 	15
+#define DAC_SCK 	16
 
+#define LCD_RS 		7
+#define LCD_RST 	8
+#define LCD_CS 		6
+#define LCD_EN 		5
 
-#define LCD_RS 7
-#define LCD_RST 8
-#define LCD_CS 6
-#define LCD_EN 5
-#define ENC_A 10
-#define ENC_B 9
-#define ENC_SW 2
+#define ENC_A 		10
+#define ENC_B 		9
+#define ENC_SW 		2
+#define SW				3  // frontpanel switch
 
 LCD_ST7032 lcd(LCD_RST, LCD_RS, LCD_CS);
 
 
 
-volatile bool encPrevState = 0;
-volatile long encPos = 65535;
-int dacStepSize = 1;
-long encLastPos = -999;
-
-// Step sizes for current adjustment:
-// Can toggle through these with the encoder pushbutton.
-
-// If you add more step sizes, make sure to adjust ENCODER_TOTAL_STEPS!
-// You also always get the "LSB" for free.
-// ENCODER_TOTAL_STEPS should count the LSB size, too.
-#define ENCODER_TOTAL_STEPS 5
-
-// the first element of currentStepValues will actually be the LSB of the DAC.
-float currentStepValues[ENCODER_TOTAL_STEPS] = {1.0, 0.010, 0.025, 0.100, 1.000}; // these should be in uA.
-
-char* stepValues[ENCODER_TOTAL_STEPS] = {"LSB", "10 uA", "25 uA", "100 uA", "1 mA"};
-
-int stepArray[ENCODER_TOTAL_STEPS]; // this will be initialized in the setupCalibration function,
-                                    // to make sure it uses the right transfer function.
-
-int stepIndex = 1;  // keeps track of which dacStepSize resolution you're at.
-                    // defaults to smallest step value above LSB.
-
-unsigned int dacVal;
-
-
-
-ISR(PCINT0_vect){
-	uint8_t p = PINB;
-	bool currentState =  p & 0b0100;
-	bool dir = p & 0b0010;
-
-	  if (dir == LOW){
-	    if(currentState == LOW && encPrevState == HIGH){
-	     encPos += dacStepSize;
-	    }
-	    else if (currentState == HIGH && encPrevState == LOW){
-	      encPos -= dacStepSize;
-	    }
-	  } else{
-	        if(currentState == LOW && encPrevState == HIGH){
-	     encPos -= dacStepSize;
-	    }
-	    else if (currentState == HIGH && encPrevState == LOW){
-	      encPos += dacStepSize;
-	    }
-	  }
-
-	  encPrevState = currentState;
-		encPos = constrain(encPos, 0, 65535);
-}
 
 
 unsigned int uAtoDacVal(float current){
@@ -664,6 +616,7 @@ void writeCurrentLCD(float val){
 }
 
 
+// bit bang it
 void writeDAC(unsigned int val){
 
  digitalWrite(DAC_CS, LOW);
@@ -674,11 +627,6 @@ void writeDAC(unsigned int val){
 		digitalWrite(DAC_SCK, HIGH);
 	}
 
-	//
-	// shiftOut(DAC_MOSI, DAC_SCK, MSBFIRST, (val >> 8));
-	// shiftOut(DAC_MOSI, DAC_SCK, MSBFIRST, val);
- // SPI.transfer(lowByte(val >> 8));
- // SPI.transfer(lowByte(val));
  digitalWrite(DAC_CS, HIGH);
 
  dacVal = val;
@@ -688,72 +636,117 @@ void writeDAC(unsigned int val){
 
 
 void setup(){
-pinMode(LCD_EN, OUTPUT);
-digitalWrite(LCD_EN, HIGH);
 
-pinMode(ENC_A, INPUT_PULLUP);
-pinMode(ENC_B, INPUT_PULLUP);
-pinMode(ENC_SW, INPUT_PULLUP);
+	pinMode(LCD_EN, OUTPUT);
+	digitalWrite(LCD_EN, HIGH);
 
-pinMode(DAC_CS, OUTPUT);
-digitalWrite(DAC_CS, HIGH);
+	pinMode(ENC_A, INPUT_PULLUP);
+	pinMode(ENC_B, INPUT_PULLUP);
+	pinMode(ENC_SW, INPUT_PULLUP);
 
-pinMode(DAC_MOSI, OUTPUT);
-pinMode(DAC_SCK, OUTPUT);
-digitalWrite(DAC_SCK, HIGH);
-digitalWrite(DAC_MOSI, LOW);
+	pinMode(DAC_CS, OUTPUT);
+	digitalWrite(DAC_CS, HIGH);
 
-pinMode(VREG_ON, OUTPUT);
-digitalWrite(VREG_ON, HIGH);
+	pinMode(DAC_MOSI, OUTPUT);
+	pinMode(DAC_SCK, OUTPUT);
+	digitalWrite(DAC_SCK, HIGH);
+	digitalWrite(DAC_MOSI, LOW);
 
-SREG |= (1<<7); // enable global interrupts
-PCICR = 0x01; // set PCIE0 bit
-PCMSK0 = 0x04;  // set PCINT2, which is PB2 / ENC_A
+	pinMode(VREG_ON, OUTPUT);
+	digitalWrite(VREG_ON, HIGH);
 
-    // initialize stepArray, then set dacStepSize accordingly.
-    stepArray[0] = 1;	// LSB step size
+	SREG |= (1<<7); // enable global interrupts
+	PCICR = 0x01; // set PCIE0 bit
+	PCMSK0 = 0x04;  // set PCINT2, which is PB2 / ENC_A
 
-    unsigned int convertedStepSize;
-    for (int i = 1; i < ENCODER_TOTAL_STEPS; i++){
-	    convertedStepSize = uAtoDacVal(currentStepValues[i]);
-	    stepArray[i] =  convertedStepSize;
-    }
+	// initialize stepArray, then set dacStepSize accordingly.
+	stepArray[0] = 1;	// LSB step size
 
-    dacStepSize = stepArray[stepIndex];
+	unsigned int convertedStepSize;
+	for (int i = 1; i < ENCODER_TOTAL_STEPS; i++){
+	  convertedStepSize = uAtoDacVal(currentStepValues[i]);
+	  stepArray[i] =  convertedStepSize;
+	}
 
-dacVal = 65535;
-writeDAC(dacVal);
+	dacStepSize = stepArray[stepIndex];
 
-SPI.begin();
-delay(1);
-lcd.begin();
-// lcd.setCursor(0,0);
-// lcd.print("on");
-writeStepLCD();
+
+	initFromEEPROM();
+
+
+	writeDAC(dacVal);
+
+	SPI.begin();
+	delay(1);
+	lcd.begin();
+
+	writeStepLCD();
+	float curr = toCurrent(encPos);
+	writeCurrentLCD(curr);
 
 }
 
 
 bool btnPressed;
+uint16_t lastPressed;
+
+bool inMaxMenu = 0;
+
 void loop(){
 
+	float curr;
+bool isPressed;
+	if (inMaxMenu){
+		if (encLastPos != encPos){
+			stepIndex = (ENCODER_TOTAL_STEPS - 1);
+			dacStepSize = stepArray[stepIndex];
+			curr = toCurrent(encPos);
+			writeCurrentLCD(curr);
+			encLastPos = encPos;
+		}
+
+
+		 isPressed = !digitalRead(ENC_SW);
+		if (isPressed & !btnPressed){
+
+			// cheap debounce
+			delay(200);
+			dacMinVal = encPos;
+
+			writeStepLCD();
+			encPos = dacVal;
+			curr = toCurrent(encPos);
+			writeCurrentLCD(curr);
+		}
+		btnPressed = isPressed;
+
+		return;
+	}
+
 	// check if pressed
-	bool isPressed = !digitalRead(ENC_SW);
+	isPressed = !digitalRead(ENC_SW);
 	if (isPressed & !btnPressed){
+		lastPressed = millis();
 		// cheap debounce
 		delay(200);
 		stepIndex = ((stepIndex + 1) % ENCODER_TOTAL_STEPS);
 		dacStepSize = stepArray[stepIndex];
 		writeStepLCD();
+	} else if (!isPressed & btnPressed & (millis() - lastPressed > 2000)){
+			lcd.clear();
+			lcd.setCursor(0,0);
+			lcd.print("MAX CURRENT:");
+			curr = toCurrent(encPos);
+			writeCurrentLCD(curr);
+			inMaxMenu = 1;
 	}
 	btnPressed = isPressed;
 
+
 	if (encLastPos != encPos){
-				writeDAC(encPos);
-				float curr = toCurrent(encPos);
-				writeCurrentLCD(curr);
-		// lcd.setCursor(4, 0);
-		// lcd.print(encPos);
+		writeDAC(encPos);
+		curr = toCurrent(encPos);
+		writeCurrentLCD(curr);
 		encLastPos = encPos;
 	}
 }
