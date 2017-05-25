@@ -558,80 +558,12 @@
 #include "src/cc_interrupts.h"
 #include "src/cc_api.h"
 
-// these are rough, but good enough for now.
-// eventually implement a calibration?
-#define transferSlope 426.311
-#define transferOffset 153.734
-
-
-#define VREG_ON		4    // vreg enable pin
-
-#define DAC_CS 		14 // A0         // chip select pin
-#define DAC_MOSI 	15
-#define DAC_SCK 	16
-
-#define LCD_RS 		7
-#define LCD_RST 	8
-#define LCD_CS 		6
-#define LCD_EN 		5
-
-#define ENC_A 		10
-#define ENC_B 		9
-#define ENC_SW 		2
-#define SW				3  // frontpanel switch
 
 LCD_ST7032 lcd(LCD_RST, LCD_RS, LCD_CS);
 
 
 
 
-
-unsigned int uAtoDacVal(float current){
-  unsigned int tmpDacVal;
-  tmpDacVal = (current*transferSlope + 0.5); // add 0.5 to round float, rather than truncate.
-  return tmpDacVal;
-}
-
-// Calculates dacVal -> current in mA, for display
-float toCurrent(unsigned int dacWord){
-        //transferSlope = 427.024;
-   //   transferOffset = 153.468;
-  return (transferOffset - dacWord/transferSlope);
-}
-
-
-
-void writeStepLCD(){
-  lcd.setCursor(0, 0);
-  lcd.print("r ");
-  lcd.print(stepValues[stepIndex]);
-  lcd.print("        ");
-}
-
-// prints current to LCD
-void writeCurrentLCD(float val){
-  lcd.setCursor(0,1);
-  lcd.print(val, 3);
-	lcd.print(" mA        ");
-}
-
-
-// bit bang it
-void writeDAC(unsigned int val){
-
- digitalWrite(DAC_CS, LOW);
-
-	for(int i = 0; i < 16; i++){
-		digitalWrite(DAC_SCK, LOW);
-		digitalWrite(DAC_MOSI, !!(val & (1 << (15 - i))));
-		digitalWrite(DAC_SCK, HIGH);
-	}
-
- digitalWrite(DAC_CS, HIGH);
-
- dacVal = val;
-
-}
 
 
 
@@ -643,6 +575,7 @@ void setup(){
 	pinMode(ENC_A, INPUT_PULLUP);
 	pinMode(ENC_B, INPUT_PULLUP);
 	pinMode(ENC_SW, INPUT_PULLUP);
+	pinMode(SW, INPUT_PULLUP);
 
 	pinMode(DAC_CS, OUTPUT);
 	digitalWrite(DAC_CS, HIGH);
@@ -653,7 +586,7 @@ void setup(){
 	digitalWrite(DAC_MOSI, LOW);
 
 	pinMode(VREG_ON, OUTPUT);
-	digitalWrite(VREG_ON, HIGH);
+	digitalWrite(VREG_ON, LOW);
 
 	SREG |= (1<<7); // enable global interrupts
 	PCICR = 0x01; // set PCIE0 bit
@@ -670,15 +603,23 @@ void setup(){
 
 	dacStepSize = stepArray[stepIndex];
 
+	// initFromEEPROM();
+	//
+	//
+	// writeDAC(dacVal);
+
+
+
+	SPI.begin();
+	delay(1);
+	lcd.begin();
+
 
 	initFromEEPROM();
 
 
 	writeDAC(dacVal);
 
-	SPI.begin();
-	delay(1);
-	lcd.begin();
 
 	writeStepLCD();
 	float curr = toCurrent(encPos);
@@ -688,63 +629,80 @@ void setup(){
 
 
 bool btnPressed;
-uint16_t lastPressed;
+// uint16_t lastPressed;
+//
+// bool inMaxMenu = 0;
 
-bool inMaxMenu = 0;
+// keeps track of whether or not dac is switched off.
+bool dacOff = 1;
 
 void loop(){
 
+
+    /**********************
+    Turns current on/off
+    **********************/
+    // Checks if switch is on.
+		// internal pullup, so negate
+    int tmpEn = !digitalRead(SW);
+
+
+    // if the switch is on but the dac was previously off...
+    if(tmpEn == HIGH && dacOff){
+      writeDAC(encPos);
+      delay(20);
+      digitalWrite(VREG_ON, HIGH);
+      dacOff = 0;
+    }
+
+    // if the switch is off but the DAC is still on...
+    if (tmpEn == LOW && !dacOff){
+      writeDAC(dacMaxVal);  // set dac to zero
+			lcd.setCursor(0,0);
+			lcd.print("WAIT...         ");
+      //writeLCD(0, "WAIT...");
+      delay(2000);
+      digitalWrite(VREG_ON, LOW);
+      dacOff = 1;
+
+			// persist to eeprom
+			EEPROM.put(DACVAL_ADDR, encPos);
+	  // // persist value to EEPROM, if different from before...
+	  // if (encPos != eepromEncPos){
+		// EEPROM.write(EEPROM_CURR_LOW, lowByte(encPos));
+		// EEPROM.write(EEPROM_CURR_HI, lowByte(encPos >> 8));
+		// eepromEncPos = encPos;
+	  // }
+
+		lcd.setCursor(0,0);
+		lcd.print("OFF             ");
+      delay(2000);
+      writeStepLCD();
+
+    }
+
+
+
 	float curr;
-bool isPressed;
-	if (inMaxMenu){
-		if (encLastPos != encPos){
-			stepIndex = (ENCODER_TOTAL_STEPS - 1);
-			dacStepSize = stepArray[stepIndex];
-			curr = toCurrent(encPos);
-			writeCurrentLCD(curr);
-			encLastPos = encPos;
-		}
+  bool isPressed;
 
-
-		 isPressed = !digitalRead(ENC_SW);
-		if (isPressed & !btnPressed){
-
-			// cheap debounce
-			delay(200);
-			dacMinVal = encPos;
-
-			writeStepLCD();
-			encPos = dacVal;
-			curr = toCurrent(encPos);
-			writeCurrentLCD(curr);
-		}
-		btnPressed = isPressed;
-
-		return;
-	}
 
 	// check if pressed
 	isPressed = !digitalRead(ENC_SW);
 	if (isPressed & !btnPressed){
-		lastPressed = millis();
+		//lastPressed = millis();
 		// cheap debounce
 		delay(200);
 		stepIndex = ((stepIndex + 1) % ENCODER_TOTAL_STEPS);
 		dacStepSize = stepArray[stepIndex];
 		writeStepLCD();
-	} else if (!isPressed & btnPressed & (millis() - lastPressed > 2000)){
-			lcd.clear();
-			lcd.setCursor(0,0);
-			lcd.print("MAX CURRENT:");
-			curr = toCurrent(encPos);
-			writeCurrentLCD(curr);
-			inMaxMenu = 1;
 	}
 	btnPressed = isPressed;
 
-
 	if (encLastPos != encPos){
-		writeDAC(encPos);
+		if (tmpEn) {
+			writeDAC(encPos);
+		}
 		curr = toCurrent(encPos);
 		writeCurrentLCD(curr);
 		encLastPos = encPos;
