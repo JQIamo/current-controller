@@ -1,15 +1,22 @@
+
+#ifndef _CC_API_H
+#define _CC_API_H
+
 #include <EEPROM.h>
 #include "LCD.h"
 
+#ifndef GITVERSION
+#define GITVERSION "unknown"
+#endif
+
 // these are rough, but good enough for now.
 // eventually implement a calibration?
-#define transferSlope 426.311
-#define transferOffset 153.734
+#define TRANSFER_SLOPE 426.311
+#define TRANSFER_OFFSET 153.734
 
+#define VREG_ON		4  // vreg enable pin
 
-#define VREG_ON		4    // vreg enable pin
-
-#define DAC_CS 		14 // A0         // chip select pin
+#define DAC_CS 		14 // chip select pin
 #define DAC_MOSI 	15
 #define DAC_SCK 	16
 
@@ -21,59 +28,77 @@
 #define ENC_A 		10
 #define ENC_B 		9
 #define ENC_SW 		2
-#define SW				3  // frontpanel switch
-
+#define SW				3
 
 #define EEPROM_INIT 0xBE
 
-
 // remember! DACMIN sets the maximum current
-// these are EEPROM addresses
-#define DACMIN_ADDR 1
-#define DACMAX_ADDR 3
-#define DACVAL_ADDR 5
+#define DACVAL_OFF 65535  // DAC value for output -> 0mA
+
+
+
+
+// Step sizes for current adjustment:
+// Can toggle through these with the encoder pushbutton.
+
+// If you add more step sizes, make sure to adjust ENCODER_TOTAL_STEPS!
+// You also always get the "LSB" for free.
+// ENCODER_TOTAL_STEPS should count the LSB size, too.
+#define ENCODER_TOTAL_STEPS 5
+
+// the first element of currentStepValues will actually be the LSB of the DAC; set elsewhere.
+float currentStepValues[ENCODER_TOTAL_STEPS] = {1.0, 0.010, 0.025, 0.100, 1.000};
+
+char * stepValues[ENCODER_TOTAL_STEPS] = {"LSB", "10 uA", "25 uA", "100 uA", "1 mA"};
+
+int stepArray[ENCODER_TOTAL_STEPS]; // this will be initialized in the setupCalibration function,
+                                    // to make sure it uses the right transfer function.
+
+int stepIndex = 1;  // keeps track of which dacStepSize resolution you're at.
+                    // defaults to smallest step value above LSB.
+
+// dac step size, used to increment in ISR
+int dacStepSize = 1;
+
 
 uint16_t dacMinVal;
-uint16_t dacMaxVal;
 uint16_t dacVal;
+int dacValAddr = 0;
+int dacMinAddr = 0;
 
 extern volatile long encPos;
 
 extern LCD_ST7032 lcd;
 
-
-
-unsigned int uAtoDacVal(float current){
-  unsigned int tmpDacVal;
-  tmpDacVal = (current*transferSlope + 0.5); // add 0.5 to round float, rather than truncate.
-  return tmpDacVal;
+// calculates delta DAC word for given current step
+uint16_t uAtoDacVal(float current){
+  // add 0.5 to round float, rather than truncate.
+  return (uint16_t)(current*TRANSFER_SLOPE + 0.5);
 }
 
 // Calculates dacVal -> current in mA, for display
 float toCurrent(unsigned int dacWord){
         //transferSlope = 427.024;
    //   transferOffset = 153.468;
-  return (transferOffset - dacWord/transferSlope);
+  return (TRANSFER_OFFSET - dacWord/TRANSFER_SLOPE);
 }
 
-
-
+// prints stepsize to line 1 of LCD
 void writeStepLCD(){
   lcd.setCursor(0, 0);
   lcd.print("r ");
   lcd.print(stepValues[stepIndex]);
-  lcd.print("        ");
+  lcd.print("           ");
 }
 
-// prints current to LCD
+// prints current to line 2 of LCD
 void writeCurrentLCD(float val){
-  lcd.setCursor(0,1);
+  lcd.setCursor(0, 1);
   lcd.print(val, 3);
 	lcd.print(" mA        ");
 }
 
-
-// bit bang it
+// bit bang DAC voltage
 void writeDAC(unsigned int val){
 
  digitalWrite(DAC_CS, LOW);
@@ -90,70 +115,49 @@ void writeDAC(unsigned int val){
 
 }
 
-
-
-
-
 void initFromEEPROM(){
-  uint8_t eepromInit;// = 0xAA;
-   EEPROM.get(0, eepromInit);
-//
-// lcd.setCursor(0,0);
-// lcd.print("Zero addr: ");
-// lcd.print(eepromInit);
-// EEPROM.write(0, 0x45);
-// delay(2000);
-//
-// lcd.setCursor(0,0);
-// eepromInit = EEPROM.read(0);
-// lcd.print("Zero addr: ");
-// lcd.print(eepromInit);
-// delay(2000);
+  int addr = 0;
+  uint8_t eepromInit;
 
+  EEPROM.get(addr, eepromInit);
 
   if (eepromInit == EEPROM_INIT){
     // load registers from eeprom
 
-    //uint16_t eeprom_byte;
+    addr += sizeof(eepromInit);
+    EEPROM.get(addr, dacMinVal);
+    dacMinAddr = addr;
 
-    //EEPROM.get(DACMIN_ADDR, eeprom_byte);
-    //dacMinVal = eeprom_byte;
-    //hardcode in for now
-    dacMinVal = 26318;
+    addr += sizeof(dacMinVal);
+    EEPROM.get(addr, encPos);
 
-    // EEPROM.get(DACMIN_ADDR + 1, eeprom_byte);
-    // dacMinVal |= (eeprom_byte << 8);
-
-    // max val
-    //EEPROM.get(DACMAX_ADDR, eeprom_byte);
-    dacMaxVal = 65535;  //eeprom_byte;
-    // EEPROM.get(DACMAX_ADDR + 1, eeprom_byte);
-    // dacMaxVal |= (eeprom_byte << 8);
-
-    EEPROM.get(DACVAL_ADDR, encPos);
-    dacVal = dacMaxVal; // start with off; just pull in last current to encoder
-    //dacVal = eeprom_byte;
-    //encPos = dacVal;
-
-      // lcd.setCursor(0,0);
-      // lcd.print("yesEEPROM");
-      // lcd.setCursor(0,1);
-      // lcd.print(dacVal);
-      // delay(2000);
+    dacValAddr = addr;  // for persisting encoder position/DAC val across power cycles
+    dacVal = DACVAL_OFF; // start with off; just pull in last current to encoder
 
   } else {
-    lcd.setCursor(0,0);
-    lcd.print("NoEEPROM");
+
+    lcd.setCursor(0, 0);
+    lcd.print("Init EEPROM");
     delay(2000);
-    //dacMinVal = 0;
-    dacMinVal = 26318;
-    dacMaxVal = 65535;
-    dacVal = 65535;
+
+    eepromInit = EEPROM_INIT;
+    // set conservative max current @ quarter scale
+    dacMinVal = 16384;
+
+    // set to "off"
+    dacVal = DACVAL_OFF;
     encPos = dacVal;
 
-    EEPROM.put(DACMIN_ADDR, dacMinVal);
-    EEPROM.put(DACMAX_ADDR, dacMaxVal);
-    EEPROM.put(DACVAL_ADDR, dacVal);
-    EEPROM.write(0, EEPROM_INIT); // set byte to show eeprom initialized
+    addr = 0;
+    EEPROM.put(addr, eepromInit); // set byte to show eeprom initialized
+
+    addr += sizeof(eepromInit);
+    EEPROM.put(addr, dacMinVal);
+
+    addr += sizeof(dacMinVal);
+    EEPROM.put(addr, dacVal);
+
   }
 }
+
+#endif

@@ -6,41 +6,40 @@
   handling this without relying on arduino attachInterrupt.
 
 */
-
+#include "cc_api.h"
 
 // initial value is off (remember, dac full scale = 0 current)
-extern uint16_t dacVal;
-extern uint16_t dacMinVal;
-extern uint16_t dacMaxVal;
+
 
 volatile bool encPrevState = 0;
 volatile long encPos;
 long encLastPos = 65535;
 
-// Step sizes for current adjustment:
-// Can toggle through these with the encoder pushbutton.
 
-// If you add more step sizes, make sure to adjust ENCODER_TOTAL_STEPS!
-// You also always get the "LSB" for free.
-// ENCODER_TOTAL_STEPS should count the LSB size, too.
-#define ENCODER_TOTAL_STEPS 5
 
-// the first element of currentStepValues will actually be the LSB of the DAC; set elsewhere.
-float currentStepValues[ENCODER_TOTAL_STEPS] = {1.0, 0.010, 0.025, 0.100, 1.000};
 
-char * stepValues[ENCODER_TOTAL_STEPS] = {"LSB", "10 uA", "25 uA", "100 uA", "1 mA"};
+int pushDownTime = 0;
+enum push_state_t { CLR = 0x00, PUSH = 0x01, HOLD = 0x02 };
+push_state_t pushFlag = 0;
 
-int stepArray[ENCODER_TOTAL_STEPS]; // this will be initialized in the setupCalibration function,
-                                    // to make sure it uses the right transfer function.
+ISR(INT0_vect){
+	bool currentState = PIND & 0b0100;
+	if (!currentState){
+		pushDownTime = millis();
+	} else {
+		int now = millis();
+		if  ((now - pushDownTime) > 2000){
+			pushFlag = HOLD;
+		} else if ((now - pushDownTime) > 40){
+			pushFlag = PUSH;
+		} else {
+			pushFlag = CLR;
+		}
+	}
+}
 
-int stepIndex = 1;  // keeps track of which dacStepSize resolution you're at.
-                    // defaults to smallest step value above LSB.
-
-// dac step size, used to increment in ISR
-int dacStepSize = 1;
 
 ISR(PCINT0_vect){
-
   // ENC_A is on PB2
   // ENC_B is on PB1
 	uint8_t p = PINB;
@@ -62,5 +61,5 @@ ISR(PCINT0_vect){
 	}
 
   encPrevState = currentState;
-	encPos = constrain(encPos, dacMinVal, dacMaxVal);
+	encPos = constrain(encPos, dacMinVal, DACVAL_OFF);
 }
