@@ -23,4 +23,3 @@ compile:
 
 clean:
 	rm -rf build/
-	rm src/gitversion.h
