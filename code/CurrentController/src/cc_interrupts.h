@@ -14,7 +14,7 @@
 volatile bool encPrevState = 0;
 volatile long encPos;
 long encLastPos = 65535;
-
+extern int menu;
 
 
 
@@ -61,5 +61,7 @@ ISR(PCINT0_vect){
 	}
 
   encPrevState = currentState;
-	encPos = constrain(encPos, dacMinVal, DACVAL_OFF);
+	if (menu != 1){
+		encPos = constrain(encPos, dacMinVal, DACVAL_OFF);
+	}
 }

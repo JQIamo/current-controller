@@ -153,10 +153,13 @@ void initFromEEPROM(){
 
     addr += sizeof(eepromInit);
     EEPROM.put(addr, dacMinVal);
+    dacMinAddr = addr;
+
 
     addr += sizeof(dacMinVal);
     EEPROM.put(addr, dacVal);
-
+    dacValAddr = addr;
+    
   }
 }
 
