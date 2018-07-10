@@ -1,2 +1,35 @@
 [Eagle]
-Version="06 05 00"
+Version="06 06 00"
+Platform="Mac OS X"
+Serial="7026C52C40-LSR-WLM-5CP"
+Globals="Globals"
+Desktop="Desktop"
+
+[Globals]
+AutoSaveProject=1
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/Eurocard-Backplane-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/JQI_Logo.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/Lin-Temp-Controller.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/coilcraft-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/connector-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/jqi-power-supply.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/jqi_passives.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/opamp-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/pinhead.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/regulator-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/rf-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/rlc-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/semiconductor-jqi.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/eagle-config/lbr-jqi/supply1.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/electronics-design/mcu-accessories/mcu-accessories.lbr"
+UsedLibrary="/Users/npisenti/Documents/jqi/electronics-design/AOM_Driver/aom_driver.lbr"
+
+[Win_1]
+Type="Control Panel"
+Loc="85 288 1033 766"
+State=2
+Number=0
+
+[Desktop]
+Screen="1440 900"
+Window="Win_1"
